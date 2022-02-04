@@ -36,3 +36,42 @@ height = [1, 1]
 max_ = Solution().maxArea(height)
 print(max_)
 ```
+<a name="FPeMB"></a>
+## 题目二：三数之和
+<a name="SUX2i"></a>
+### 题目描述：
+给你一个包含** n **个整数的数组 **nums**，判断 **nums** 中是否存在三个元素** a，b，c** ，使得 **a + b + c = 0** ？请你找出所有和为** 0 且不重复的三元组**。<br />注意：答案中不可以包含重复的三元组。
+<a name="d6EHR"></a>
+### 示例：
+**输入**：nums = [-1,0,1,2,-1,-4]<br />**输出**：[[-1,-1,2],[-1,0,1]]<br />​
+
+**输入**：nums = []<br />**输出**：[]<br />​
+
+**输入**：nums = [0]<br />**输出**：[]
+<a name="an4Mj"></a>
+### 解题思路：
+三数的和，可以将第一项，即最小项进行移项，转换成两数之和。将序列排序后，可利用双指针的方法进行双向扫描。这是大致方向。具体细节要注意不能有重复结果，因此统一采用第一项移项，而第二项即通过左指针扫描的项从第一项的下一个开始（second = first + 1）。第一第二项的扫描还需注意剔除重复的数字。第三项作为右指针扫描
+<a name="n7cd9"></a>
+### 代码如下：
+```python
+class Solution(object):
+    def threeSum(self, nums):
+        lens = len(nums)
+        nums.sort()
+        ans = []
+        for first in range(lens):
+            if first > 0 and nums[first] == nums[first - 1]:
+                continue
+            res = -nums[first]
+            third = lens - 1
+            for second in range(first + 1, lens):
+                if second > first + 1 and nums[second] == nums[second - 1]:
+                    continue
+                while second < third and nums[second] + nums[third] > res:
+                    third -= 1
+                if second == third:
+                    break
+                if nums[second] + nums[third] == res:
+                    ans.append([nums[first], nums[second], nums[third]])
+        return ans
+```

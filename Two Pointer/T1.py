@@ -1,6 +1,3 @@
-from socket import herror
-
-
 class Solution(object):
     def maxArea(self, height):
         l = 1
