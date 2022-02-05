@@ -75,3 +75,52 @@ class Solution(object):
                     ans.append([nums[first], nums[second], nums[third]])
         return ans
 ```
+<a name="K2cpH"></a>
+## 题目二：最接近的三数之和
+<a name="uebhY"></a>
+### 题目描述：
+给你一个长度为** n** 的整数数组** nums **和 一个目标值 **target**。请你从** nums **中选出三个整数，使它们的和与** target** 最接近。返回这三个数的和。假定每组输入只存在恰好一个解。
+<a name="kDuNA"></a>
+### 示例:
+**输入**：nums = [-1,2,1,-4], target = 1<br />**输出**：2<br />**解释**：与 target 最接近的和是 2 (-1 + 2 + 1 = 2) 。<br />​
+
+**输入**：nums = [0,0,0], target = 1<br />**输出**：0
+<a name="MDu0W"></a>
+### 解题思路：
+与上一道题类似，三数之和依旧可以用双指针的方法来枚举。定义一个best变量在扫描过程中更新当前最好的结果（important！！！）。扫描方式依旧是通过比较sum和target的大小进行，sum大则右指针左移，sum小则左指针左移，直到两指针相遇为止。
+<a name="UOpMP"></a>
+### 代码如下:
+```python
+class Solution(object):
+    def threeSumClosest(self, nums, target):
+        lens = len(nums)
+        nums.sort()
+        sum = 0
+        best = 2**31 - 1
+        for first in range(lens):
+            if first > 0 and nums[first] == nums[first - 1]:
+                continue
+            third = lens - 1
+            for second in range(first + 1, lens):
+                if second > first + 1 and nums[second] == nums[second - 1]:
+                    continue
+                while second < third:
+                    sum = nums[first] + nums[second] + nums[third]
+                    if abs(best - target) > abs(sum - target):
+                        best = sum
+                    if sum > target:
+                        third_ = third - 1
+                        while second < third_ and nums[third] == nums[third_]:
+                            third_ -= 1
+                        third = third_
+                    elif sum < target:
+                        second_ =second + 1
+                        while second_ < third and nums[second] == nums[second_]:
+                            second_ += 1
+                        second = second_
+                    else:
+                        return sum
+        return best
+```
+​
+
