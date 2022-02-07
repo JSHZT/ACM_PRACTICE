@@ -122,5 +122,82 @@ class Solution(object):
                         return sum
         return best
 ```
-​
+​<br />
+<a name="czvaG"></a>
+## 题目三：四数之和
+<a name="WBF5I"></a>
+### 题目描述：
+给你一个由 n 个整数组成的数组 **nums** ，和一个目标值 **target **。请你找出并返回满足下述全部条件且不重复的四元组** [nums[a], nums[b], nums[c], nums[d]] **（若两个四元组元素一一对应，则认为两个四元组重复）：<br />0 <= a, b, c, d < n<br />a、b、c 和 d 互不相同<br />nums[a] + nums[b] + nums[c] + nums[d] == target<br />你可以按 任意顺序 返回答案 。
+<a name="hLdsl"></a>
+### 示例：
+**输入**：nums = [1,0,-1,0,-2,2], target = 0<br />**输出**：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]<br />​
 
+**输入**：nums = [2,2,2,2,2], target = 8<br />**输出**：[[2,2,2,2]]
+<a name="DSSFq"></a>
+### 解题思路：
+相比于三数之和，区别在于左右指针是第三第四个数，而另外两个数需要在外层循环中枚举，其他不必多说。值得注意的是：可以进行一些剪枝操作（加上节约时间，不加答案也一样）<br />1.确定一个数时，前四个数相加大于target，那么可以直接判断往后再也没有答案，直接break<br />2,确定一个数时，如果第一个数和序列最后面三个数相加小于target时，直接枚举下一个第一个数，continue<br />3.确定两个数时，若前两个数和序列最后两个数相加小于target，则同理枚举下一个第二个数<br />4.确定两个数时，前四个数如果相加大于target，则break
+<a name="FIDq9"></a>
+### 代码如下:
+```python
+class Solution(object):
+    def fourSum(self, nums, target):
+        lens = len(nums)
+        nums.sort()
+        ans = []
+        for i in range(lens-3):
+            if nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target:
+                break
+            if nums[i] + nums[lens-3] + nums[lens-2] + nums[lens-1] < target:
+                continue
+            if i > 0 and nums[i] == nums[i-1]:
+                continue
+            for j in range(i+1, lens-2):
+                if j > i and nums[j] == nums[j-1]:
+                    continue
+                if nums[i] + nums[j] + nums[j+1] + nums[j+2] > target:
+                    break
+                if nums[i] + nums[j] + nums[lens-2] + nums[lens-1] < target:
+                    continue
+                left, right = j + 1, lens - 1
+                while left < right:
+                    sum = nums[i] + nums[j] + nums[left] + nums[right]
+                    if sum == target:
+                        ans.append([nums[i], nums[j], nums[left], nums[right]])
+                        while left < right and nums[left] == nums[left+1]:
+                            left += 1
+                        left += 1
+                        while left <right and nums[right] == nums[right-1]:
+                            right -= 1
+                        right -= 1
+                    elif sum > target:
+                            right -= 1
+                    elif sum < target:
+                        left += 1
+        return ans
+```
+<a name="KhCso"></a>
+## 题目四：删除链表倒数第N个节点
+<a name="ZPZAC"></a>
+### 题目描述:
+给你一个链表，删除链表的倒数第 n_ _个结点，并且返回链表的头结点。
+<a name="BIwXY"></a>
+### 解题思路：
+同样是双指针，只是这边向同一个方向移动，右指针比左指针快n个节点，那么右指针扫描到最右边的时候，左指针对应的值即是链表倒数第n个数
+<a name="QNlHu"></a>
+### 代码如下:
+```python
+class Solution:
+    def removeNthFromEnd(self, head, n):
+        dummy = ListNode(0, head)
+        first = head
+        second = dummy
+        for i in range(n):
+            first = first.next
+
+        while first:
+            first = first.next
+            second = second.next
+        
+        second.next = second.next.next
+        return dummy.next
+```
