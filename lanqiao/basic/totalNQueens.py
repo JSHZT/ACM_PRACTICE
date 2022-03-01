@@ -44,15 +44,3 @@ class Solution(object):
                     return False
             return True
         return False
-    
-    
-if __name__ == '__main__':
-    nums = 4
-    s = [
-        ['1', '1', '1' , '1'],
-        ['1', '1', '1' , '1'],
-        ['1', '1', '1' , '1'],
-        ['1', '1', '1' , '1']
-    ]
-    solution = Solution().totalNQueens(nums, s)
-    print(solution)
