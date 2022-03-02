@@ -7,13 +7,6 @@ class Prime(object):
         return True
     
     def getPrimeList_Eratosthenes(self, l, r):
-        if(l > r):
-            print('the left could not bigger than the right!')
-            return   
-        if(r < 2):
-            return[]
-        if(l < 2):
-            l = 2
         ans = [True for i in range(r+1)]
         for j in range(2, round(math.sqrt(r)) + 1):
             if ans[j]:
@@ -21,9 +14,30 @@ class Prime(object):
                     ans[i] = False
         return [i for i in range(l, r+1) if ans[i]]
     
-    def getPrimeList_Euler(self, l, r):
-        return
+    def getFactorsList(self, l, n):
+        temp = ''
+        while n>1:
+            for i in l:
+                if n % i == 0:
+                    n = n / i
+                    if n != 1:
+                        temp += str(i) + '*' 
+                    else:
+                        temp += str(i) 
+                    break
+        return temp
+            
 if __name__ == '__main__':
     prime_tool = Prime()
-    primelist = prime_tool.getPrimeList_Eratosthenes(2, 2)
-    print(primelist)
+    while True:
+        try:
+            num_in = list(map(int, input().split()))
+            nums = [i for i in range(num_in[0], num_in[1]+1)]
+            l = 2
+            r = max(nums)
+            PrimeList = prime_tool.getPrimeList_Eratosthenes(l, r)
+            for num in nums:
+                ans = str(num) + '=' + prime_tool.getFactorsList(PrimeList, num)
+                print(ans)
+        except:
+            break
