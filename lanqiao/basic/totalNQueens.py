@@ -30,7 +30,7 @@ class Solution(object):
         return
         
     def valid_w(self, temp_w, row, s):
-        if s[row][temp_w[row]] == '1':
+        if s[row][temp_w[row]] == 1:
             for i in range(row):
                 if abs(temp_w[row] == temp_w[i]) or (abs(i-row) == abs(temp_w[i] - temp_w[row])):
                     return False
@@ -38,9 +38,18 @@ class Solution(object):
         return False
     
     def valid_b(self, temp_b, temp_w, row, s):
-        if s[row][temp_b[row]] == '1' and temp_w[row] != temp_b[row]:
+        if s[row][temp_b[row]] == 1 and temp_w[row] != temp_b[row]:
             for i in range(row):
                 if abs(temp_b[row] == temp_b[i]) or (abs(i-row) == abs(temp_b[i] - temp_b[row])):
                     return False
             return True
         return False
+
+if __name__ == '__main__':
+    n = int(input())
+    s = []
+    for i in range(n):
+        s.append(list(map(int, input().split())))
+    len = Solution().totalNQueens(n, s)
+    print(len)
+    
