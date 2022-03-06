@@ -215,3 +215,75 @@ class Solution(object):
                 dp[i] += dp[j] * dp[i-j-1]
         return dp[n]
 ```
+<a name="yXQAy"></a>
+## 题目八：01背包问题
+<a name="AvmSs"></a>
+### 题目描述:
+给出n个物品的重量列表cost和价值value列表，以及背包所能携带的最大重量k，求解背包能够装入的最大价值
+<a name="XXZBZ"></a>
+### 解题思路:
+定义动态规划数组dp[i][j]为从0-i个物品中选择时，背包重量为j时的最大价值，那么对每个物品i，dp[i][j]就面临两种选择，拿不拿这个物品。如果不拿的话，很明显，最大价值为dp[i-1][j],如果拿的话，就要先得到减去物品重量后的背包重量所对应的不拿这个物品的最大值，然后加上这个物品的价值，两种选择选择最大价值的，状态转移方程为：dp[i][j] = max(dp[i-1][j] , dp[i-1][j-weight[i]] + value[i])<br />初始化步骤：第一列是没有背包的情况，不能拿任何物品，因此第一列都是0，第一行是只有一个物品的情况下对不同背包的情况，那么假如背包内存不够，则为0，背包内存足够，最大价值便是第一个物品的价值。
+<a name="bzYdv"></a>
+### 代码如下:
+```python
+class Solution(object):
+    def twod_dp(self, cost, value, k):
+        dp = [[0 for i in range(len(cost))] for j in range(k+1)]
+        for i in range(len(k+1)):
+            if cost[0] > i:
+                dp[0][i] = 0
+            else:
+                dp[0][i] = value[0]
+        for i in range(len(cost)):
+            for j in range(k+1):    
+                if j < cost[i]:
+                    dp[i][j] = dp[i-1][j]
+                else:
+                    dp[i][j] = max(dp[i][j-cost[i]] + value[i], dp[i-1][j])
+        return dp[-1][-1]
+```
+<a name="AtGn4"></a>
+### 优化拓展：
+很明显，二位规划数组中有着多余的存储空间，例如dp[i-1][j-cost[i]]，完全可以变成dp[i][j-cost[i]]，因此，完全可以将其空间压缩，转化为一维度的数组。定义dp[j]为背包容量为j时的最大价值。那么状态转移方程也将变化为：dp[j] = max(dp[i], dp[j-cost[i]]+value[i])，值得注意的细节是遍历的顺序问题，这里必须要倒序遍历，否则会出现重复放入物品的错误。
+<a name="Rswzq"></a>
+### 代码如下：
+```python
+class Solution(object):
+    def oned_dp(self, cost, value, k):
+        dp = [0 for i in range(1+k)]
+        for i in range(len(cost)):
+            for j in range(k, cost[i]-1, -1):
+                dp[j] = max(dp[j], dp[j-cost[i]] + value[i])
+        return dp[-1]
+```
+<a name="vPOuL"></a>
+## 题目九：分割等和子集leetcode416
+<a name="aSdKR"></a>
+### 题目描述:
+给你一个 **只包含正整数 **的 **非空 **数组 nums 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+<a name="gNKnl"></a>
+### 示例:
+输入：nums = [1,5,11,5]<br />输出：true<br />解释：数组可以分割成 [1, 5, 5] 和 [11] 。<br />​
+
+输入：nums = [1,2,3,5]<br />输出：false<br />解释：数组不能分割成两个元素和相等的子集。
+<a name="Ef0LB"></a>
+### 解题思路:
+对每个数，具有选或不选的考虑，转化为01背包问题，只需要将cost和value都特殊化至nums即可。当能够求出sum/2 的和时，即能返回True，详情见代码
+<a name="aTF2d"></a>
+### 代码如下:
+```python
+class Solution(object):
+    def canPartition(self, nums):
+        temp = sum(nums)
+        if temp%2!=0:
+            return False
+        sum_ = temp >> 1
+        dp = [0 for i in range(sum_+1)]
+        for i in range(len(nums)):
+            for j in range(sum_, nums[i]-1, -1):
+                dp[j] = max(dp[j], dp[j - nums[i]] + nums[i])
+        if dp[-1] == sum_:
+            return True
+        else:
+            return False
+```
