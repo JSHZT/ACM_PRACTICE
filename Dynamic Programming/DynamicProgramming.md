@@ -275,7 +275,7 @@ class Solution(object):
 class Solution(object):
     def canPartition(self, nums):
         temp = sum(nums)
-        if temp%2!=0:
+        if temp % 2 != 0:
             return False
         sum_ = temp >> 1
         dp = [0 for i in range(sum_+1)]
@@ -287,3 +287,57 @@ class Solution(object):
         else:
             return False
 ```
+<a name="BDrDg"></a>
+## 题目十：最后一块石头的重量Ⅱ leetcode1049
+<a name="IEYd9"></a>
+### 题目描述:
+有一堆石头，用整数数组 stones 表示。其中 stones[i] 表示第 i 块石头的重量。<br />每一回合，从中选出任意两块石头，然后将它们一起粉碎。假设石头的重量分别为 x 和 y，且 x <= y。那么粉碎的可能结果如下：<br />如果 x == y，那么两块石头都会被完全粉碎；<br />如果 x != y，那么重量为 x 的石头将会完全粉碎，而重量为 y 的石头新重量为 y-x。<br />最后，最多只会剩下一块 石头。返回此石头 最小的可能重量 。如果没有石头剩下，就返回 0。
+<a name="KB1gE"></a>
+### 示例：
+略，题目描述很清楚
+<a name="aVX80"></a>
+### 解题思路:
+本题目完全可以将石头分堆,将两堆一起撞,得到的结果也符合题目描述.那么,只需要分成的两堆重量分别都尽可能接近sum/2,即可得到最小的石头重量.由于其中一堆的重量只要定下,那么另一堆的重量也会定下,因此,转化为背包问题,针对其中一堆,寻找尽可能接近sum/2的价值即可.此时背包问题中,weight和value都是nums数组,具体看代码
+<a name="NXnIa"></a>
+### 代码如下:
+```python
+class Solution(object):
+    def lastStoneWeightII(self, stones):
+        temp = sum(stones)
+        sum_ = temp>>1
+        dp = [0 for _ in range(sum_+1)]
+        for i in range(len(stones)):
+            for j in range(sum_, stones[i]-1, -1):
+                dp[j] = max(dp[j], dp[j-stones[i]] + stones[i])
+        ans = abs(temp - 2 * dp[-1]) ##算出来其中一堆之后还要相撞
+        return ans
+```
+<a name="Vn9KK"></a>
+## 题目十一:求目标和的组合数量
+<a name="RHsOU"></a>
+### 题目描述:
+给你一个整数数组 nums 和一个整数 target 。<br />向数组中的每个整数前添加 '+' 或 '-' ，然后串联起所有整数，可以构造一个 表达式 ：<br />例如，nums = [2, 1] ，可以在 2 之前添加 '+' ，在 1 之前添加 '-' ，然后串联起来得到表达式 "+2-1" 。<br />返回可以通过上述方法构造的、运算结果等于 target 的不同 表达式 的数目。
+<a name="nHCIh"></a>
+### 示例:
+输入：nums = [1,1,1,1,1], target = 3<br />输出：5<br />解释：一共有 5 种方法让最终目标和为 3 。<br />-1 + 1 + 1 + 1 + 1 = 3<br />+1 - 1 + 1 + 1 + 1 = 3<br />+1 + 1 - 1 + 1 + 1 = 3<br />+1 + 1 + 1 - 1 + 1 = 3<br />+1 + 1 + 1 + 1 - 1 = 3
+<a name="XJVAf"></a>
+### 解题思路:
+对赋予加号的数和赋予减号的数进行分堆,但这里区别是排列组合的问题,而不单是判断能否有解.很直接想到的是回溯爆搜,但是会超时.这里采用的是动态规划的办法.定义dp[j]为加起来能够得到和为j的组合数量,换个角度,当定下nums数组的其中一个数,就转化成了有dp[j-nums[i]]中方法,遍历不同的nums,就有不同的组合数量,把这些组合数量加起来就是答案.
+<a name="JGq8Z"></a>
+### 代码如下:
+```python
+class Solution(object):
+    def findTargetSumWays(self, nums, target):
+        temp = sum(nums)
+        if temp < abs(target) or (temp+target) % 2 != 0:
+            return 0
+        sum_ = (temp + target) >> 1
+        dp = [0 for _ in range(sum_ + 1)]
+        dp[0] = 1
+        for i in range(len(nums)):
+            for j in range(sum_, nums[i]-1, -1):
+                dp[j] += dp[j-nums[i]]
+        return dp[-1]
+```
+<a name="baYIv"></a>
+## ​<br />
